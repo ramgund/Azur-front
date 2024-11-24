@@ -1,10 +1,38 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'
+import { Company, UserProfile } from "@/types/user"
+import axios from "axios";
 
-export async function getUserProfile(): Promise<UserProfile> {
-  const res = await fetch(`${API_URL}/profile`)
-  if (!res.ok) throw new Error('Failed to fetch profile')
-  return res.json()
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3006'
+
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3006",
+});
+
+export async function getUserProfile(token: string): Promise<UserProfile> {
+  try {
+    const response = await api.get<UserProfile>("/user/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Incluindo o token no cabeçalho
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar o perfil do usuário:", error);
+    throw new Error("Failed to fetch profile");
+  }
 }
+
+
+interface LoginData {
+  email: string;
+  password: string;
+}
+
+export async function authenticateUser(data: { email: string; password: string }) {
+  const response = await api.post("/user/login", data);
+  return response.data;
+}
+
+
 
 export async function updateUserProfile(data: Partial<UserProfile>): Promise<UserProfile> {
   const res = await fetch(`${API_URL}/profile`, {

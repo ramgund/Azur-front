@@ -18,10 +18,10 @@ export function UserNav({ user }: UserNavProps) {
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{user.name[0]}</AvatarFallback>
+            <AvatarImage src="/images/avatar.png" alt="User" />
+            <AvatarFallback></AvatarFallback>
           </Avatar>
-          <span>{user.name}</span>
+          <span>azur</span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

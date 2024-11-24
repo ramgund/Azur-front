@@ -17,12 +17,12 @@ export function Layout({ user, children }: LayoutProps) {
           <UserNav user={user} />
         </div>
       </header>
-      <main className="container mx-auto p-6">
+      {/* <main className="container mx-auto p-6">
         <div className="mb-6">
-          <RoleSelector currentRole={user.role} />
+          <RoleSelector currentRole={user.email} />
         </div>
         {children}
-      </main>
+      </main> */}
     </div>
   )
 }
