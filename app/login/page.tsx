@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authenticateUser } from "@/services/api";
+import { Logo } from "@/components/ui/logo";
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -35,12 +36,11 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-  
+
       const response = await authenticateUser(data);
-  
-      // Verifique se o token está na resposta
+
       if (response && response.token) {
-        localStorage.setItem("authToken", response.token); // Armazena o token no localStorage
+        localStorage.setItem("authToken", response.token);
         router.push("/profile");
       } else {
         setErrorMessage("Email ou senha inválidos");
@@ -53,70 +53,97 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded shadow">
-        <h1 className="text-xl font-semibold mb-4 text-center">Login</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Campo Email */}
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="seuemail@exemplo.com"
-              {...register("email")}
-              disabled={isLoading}
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
+    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+      {/* Left side - Login Form */}
+      <div className="flex flex-col items-center justify-center bg-white p-8">
+        <div className="w-full max-w-sm space-y-8">
+          <div className="flex justify-center">
+            <Logo className="h-10 w-10 text-blue-600" />
           </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm text-gray-600">
+                EMAIL
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                {...register("email")}
+                disabled={isLoading}
+                className="border-gray-300 focus:ring-blue-600"
+              />
+              {errors.email && (
+                <p className="text-sm text-red-600">{errors.email.message}</p>
+              )}
+            </div>
 
-          {/* Campo Senha */}
-          <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Sua senha"
-              {...register("password")}
-              disabled={isLoading}
-            />
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm text-gray-600">
+                SENHA
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                {...register("password")}
+                disabled={isLoading}
+                className="border-gray-300 focus:ring-blue-600"
+              />
+              {errors.password && (
+                <p className="text-sm text-red-600">{errors.password.message}</p>
+              )}
+            </div>
+
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="remember"
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+                lembre-me
+              </label>
+            </div>
+
+            {errorMessage && (
+              <p className="text-sm text-red-600 text-center">{errorMessage}</p>
             )}
-          </div>
 
-          {/* Mensagem de Erro */}
-          {errorMessage && (
-            <p className="text-sm text-red-500 text-center">{errorMessage}</p>
-          )}
+            <div className="flex space-x-4">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="flex-1 bg-blue-600 text-white hover:bg-blue-700 rounded-md"
+              >
+                {isLoading ? "Entrando..." : "ENTRAR"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1 border-blue-600 text-blue-600 rounded-md"
+                asChild
+              >
+                <Link href="/signup">CADASTRE-SE</Link>
+              </Button>
+            </div>
 
-          {/* Botão de Login */}
-          <Button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700"
-            disabled={isLoading}
-          >
-            {isLoading ? "Entrando..." : "Entrar"}
-          </Button>
-        </form>
-
-        {/* Links Auxiliares */}
-        <div className="text-center mt-4 space-y-2">
-          <Link
-            href="/signup"
-            className="text-sm text-blue-600 hover:text-blue-700"
-          >
-            Cadastre-se
-          </Link>
-          <Link
-            href="/reset-password"
-            className="text-sm text-blue-600 hover:text-blue-700"
-          >
-            Esqueceu a senha?
-          </Link>
+            <div className="text-center">
+              <Link
+                href="/reset-password"
+                className="text-sm text-gray-600 hover:text-gray-800"
+              >
+                esqueceu a senha?
+              </Link>
+            </div>
+          </form>
         </div>
+      </div>
+
+      {/* Right side - Logo with Gradient */}
+      <div className="hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-blue-700 text-white">
+        <Logo className="h-16 w-16 text-white" />
+        <h1 className="mt-4 text-4xl font-bold">AZUR</h1>
       </div>
     </div>
   );
